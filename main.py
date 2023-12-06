@@ -29,6 +29,15 @@ enemigo_x_cambio = 1
 enemigo_y_cambio = 50
 
 
+# Variables de bala
+img_bala = pygame.image.load("bala.png")
+bala_x = 0
+bala_y = 500
+bala_x_cambio = 0
+bala_y_cambio = 1
+bala_visible = False
+
+
 # Función del jugador
 def jugador(x, y):
     pantalla.blit(img_jugador, (x, y))
@@ -37,6 +46,12 @@ def jugador(x, y):
 # Función del enemigo
 def enemigo(x, y):
     pantalla.blit(img_enemigo, (x, y))
+
+# Función disparar bala
+def disparar_bala(x, y):
+    global bala_visible
+    bala_visible = True
+    pantalla.blit(img_bala, (x + 16, y + 10))
 
 # Loop del juego
 se_ejecuta = True
@@ -52,17 +67,19 @@ while se_ejecuta:
         if evento.type == pygame.QUIT:
             se_ejecuta = False
 
-        # Presionar flechas
+        # Presionar controles
         if evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_LEFT:
-              jugador_x_cambio = - 0.3
+              jugador_x_cambio = -1
             if evento.key == pygame.K_RIGHT:
-              jugador_x_cambio = + 0.3
+              jugador_x_cambio = 1
+            if evento.key == pygame.K_SPACE:
+               disparar_bala(jugador_x, bala_y)
 
         # Soltar flechas
         if evento.type == pygame.KEYUP:
-           if evento.key == pygame.K_LEFT or pygame.K_RIGHT:
-              jugador_x_cambio = 0
+            if evento.key == pygame.K_LEFT or pygame.K_RIGHT:
+               jugador_x_cambio = 0
     
     # Modificar ubicación del jugador
     jugador_x += jugador_x_cambio
@@ -75,15 +92,19 @@ while se_ejecuta:
 
     # Modificar ubicación del enemigo
     enemigo_x += enemigo_x_cambio
-    enemigo_y += enemigo_y_cambio
 
     # Mantener dentro de los bordes al enemigo
     if enemigo_x <= 0:
-       enemigo_x_cambio = + 0.3
-       enemigo_y_cambio = + 50
+       enemigo_x_cambio = 1
+       enemigo_y += enemigo_y_cambio
     if enemigo_x >= 736:
-       enemigo_x_cambio = - 0.3
-       enemigo_y_cambio = + 50
+       enemigo_x_cambio = -1
+       enemigo_y += enemigo_y_cambio
+
+    # Movimiento de la bala
+    if bala_visible:
+       disparar_bala(jugador_x, bala_y)
+       bala_y -= bala_y_cambio
 
 
     jugador(jugador_x, jugador_y)

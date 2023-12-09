@@ -57,6 +57,16 @@ fuente = pygame.font.Font("fastest.ttf", 20)
 texto_x = 10
 texto_y = 10
 
+# Texto de fin de juego
+fuente_fin = pygame.font.Font("fastest.ttf", 20)
+
+
+def texto_fin():
+    mi_fuente_final = fuente_fin.render(
+        "F I N   D E L   J U E G O", True, (255, 255, 255)
+    )
+    pantalla.blit(mi_fuente_final, (60, 200))
+
 
 # Mostar puntuación
 def mostrar_puntuacion(x, y):
@@ -132,6 +142,13 @@ while se_ejecuta:
 
     # Modificar ubicación del enemigo
     for e in range(cantidad_enemigos):
+        # Fin del juego
+        if enemigo_y[e] > 500:
+            for k in range(cantidad_enemigos):
+                enemigo_y[k] = 1000
+            texto_fin()
+            break
+
         enemigo_x[e] += enemigo_x_cambio[e]
 
         # Mantener dentro de los bordes al enemigo

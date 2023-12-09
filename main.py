@@ -2,6 +2,8 @@ import pygame
 import random
 import math
 
+from pygame import mixer
+
 # Inicializar Pygame
 pygame.init()
 
@@ -14,13 +16,17 @@ icono = pygame.image.load("ovni.png")
 pygame.display.set_icon(icono)
 fondo = pygame.image.load("fondo.png")
 
+# Agregar música
+mixer.music.load("musica_fondo.mp3")
+mixer.music.set_volume(0.3)
+mixer.music.play(-1)
+
 # Variables de jugador
 img_jugador = pygame.image.load("cohete.png")
 jugador_x = 368
 jugador_y = 500
 jugador_x_cambio = 0
 jugador_y_cambio = 0
-
 
 # Variables de enemigo
 img_enemigo = []
@@ -47,6 +53,17 @@ bala_visible = False
 
 # Variables puntuación
 puntuacion = 0
+fuente = pygame.font.Font("fastest.ttf", 20)
+texto_x = 10
+texto_y = 10
+
+
+# Mostar puntuación
+def mostrar_puntuacion(x, y):
+    puntuacion_texto = fuente.render(
+        f"P u n t u a c i ó n :  {puntuacion}", True, (255, 255, 255)
+    )
+    pantalla.blit(puntuacion_texto, (x, y))
 
 
 # Función del jugador
@@ -94,6 +111,8 @@ while se_ejecuta:
             if evento.key == pygame.K_RIGHT:
                 jugador_x_cambio = 1
             if evento.key == pygame.K_SPACE and not bala_visible:
+                sonido_bala = mixer.Sound("disparo.mp3")
+                sonido_bala.play()
                 bala_x = jugador_x
                 disparar_bala(bala_x, bala_y)
 
@@ -123,9 +142,11 @@ while se_ejecuta:
             enemigo_x_cambio[e] = -1
             enemigo_y[e] += enemigo_y_cambio[e]
 
-            # Colisión
+        # Colisión
         colision = hay_colision(enemigo_x[e], enemigo_y[e], bala_x, bala_y)
         if colision:
+            sonido_colision = mixer.Sound("golpe.mp3")
+            sonido_colision.play()
             bala_y = 500
             bala_visible = False
             puntuacion += 1
@@ -144,6 +165,8 @@ while se_ejecuta:
         bala_y -= bala_y_cambio
 
     jugador(jugador_x, jugador_y)
+
+    mostrar_puntuacion(texto_x, texto_y)
 
     # Actualizar
     pygame.display.update()

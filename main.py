@@ -58,7 +58,7 @@ texto_x = 10
 texto_y = 10
 
 # Texto de fin de juego
-fuente_fin = pygame.font.Font("fastest.ttf", 20)
+fuente_fin = pygame.font.Font("fastest.ttf", 36)
 
 
 def texto_fin():
@@ -143,7 +143,7 @@ while se_ejecuta:
     # Modificar ubicación del enemigo
     for e in range(cantidad_enemigos):
         # Fin del juego
-        if enemigo_y[e] > 500:
+        if enemigo_y[e] > 450:
             for k in range(cantidad_enemigos):
                 enemigo_y[k] = 1000
             texto_fin()
